@@ -1,0 +1,2 @@
+# IA
+Intelligence Artificial exercises
