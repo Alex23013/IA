@@ -39,7 +39,7 @@ class Celda{
   }
   
   void printVecinos(){
-  cout<<"vecinos de "<<name<<" : ";
+  cout<<"\nvecinos de "<<name<<" : ";
     for(int i =0;i < vecinos.size();i++){
       cout<<vecinos[i].first->name<<"_";
     }
@@ -50,21 +50,23 @@ class Celda{
   }
   
   void conectar(Celda& V, int distancia){
-  
     vecinos.push_back(make_pair(&V,distancia));
     V.vecinos.push_back(make_pair(this,distancia));
-    
   }
   
   bool operator == (Celda other){
     return this->x == other.x && this->y == other.y && this->name == other.name ;
   }
   
+  bool operator != (Celda other){
+    return this->x != other.x && this->y != other.y && this->name != other.name ;
+  } 
+  
   bool pertenece(Celda other){
-  bool esta = false;
-  for(int i =0;i < vecinos.size();i++){
-    if (vecinos[i].first->name == other.name){esta= true;}
+    bool esta = false;
+    for(int i =0;i < vecinos.size();i++){
+      if (vecinos[i].first->name == other.name){esta= true;}
+      }
+      return esta;
     }
-    return esta;
-  }
   };

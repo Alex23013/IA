@@ -5,11 +5,11 @@
 #include<time.h>
 using namespace std;
 
-int N = 10;
+int N = 50;
 
 class Grilla{
   public:
-  Celda grilla [10][10]; //50*50
+  Celda grilla [50][50]; //50*50
   vector<Celda> targets;
   int numTargets;
   
@@ -19,10 +19,9 @@ class Grilla{
   int tmp;
   int tName=65;
   for(int i =0; i< numTargets;i++){
-      tmp = rand()%(N*10+1);
-      //cout<<tmp<<" - ";
-      int tx = tmp/10;
-      int ty = tmp%10;
+      tmp = rand()%(N*N+1);
+      int tx = tmp/100;
+      int ty = tmp%100;
       grilla[tx][ty].setCelda(tx,ty,1,tName);
       targets.push_back(grilla[tx][ty]);
       tName++;
