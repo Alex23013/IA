@@ -4,12 +4,12 @@
 class PathPlanning{
 public:
   Grilla* myMap;
-  map<Celda,int> distanciaAlObjetivo;
-  vector<Celda*> resultado;
-  Celda* fin;
+  vector<pair<Celda*,int> > alfin;
+  vector<Celda> resultado;
+  Celda fin;
   
   PathPlanning(){  
-  myMap = new Grilla(5);
+  myMap = new Grilla(15);
   myMap->print();
   myMap->printTargets();
   }
@@ -19,16 +19,17 @@ public:
       for(int j = 1;j < myMap->numTargets;j++){
         int dTmp = myMap->targets[i].distancia(myMap->targets[j]);
         if(dTmp<5){
-          cout<<"d<5\n";
-          myMap->targets[i].conectar(&(myMap->targets[j]), dTmp);
+          myMap->targets[i].conectar(myMap->targets[j], dTmp);
         }
+       // cout<<myMap->targets[i].name<<","<<myMap->targets[j].name<<"l"<<dTmp<<"\n";
       }
     }
   }
   
   void mostrarRespuesta(){
+  cout<<"\nRUTA: ";
     for(int i = 0;i < resultado.size();i++){
-      cout<<resultado[i]->name<<" - ";
+      cout<<resultado[i].name<<" - ";
     }
   }
   
@@ -41,39 +42,70 @@ public:
       
       if(myMap->targets[i].name == A){
         //cout<<"\nfound a";
-        resultado.push_back(&myMap->targets[i]);
+        resultado.push_back(myMap->targets[i]);
         isA = true;
       }
       
       if(myMap->targets[i].name == B){
         //cout<<"\nfound b";
-        fin = &myMap->targets[i]; 
+        fin = myMap->targets[i]; 
         isB = true;
       }
     i++;
     }
-    //TODO: arreglar esta inserción en mapa
-   /* for(int i=0; i<myMap->numTargets;i++){
-      int tmp = fin->distancia(myMap->targets[i]);
-      distanciaAlObjetivo.insert ( std::pair<Celda,int>(myMap->targets[i], tmp));
-    }*/
-    cout<<"distanciaAlObjetivo: "<<distanciaAlObjetivo.size();
+    
+    for(int i=0; i<myMap->numTargets;i++){
+      int tmp = fin.distancia(myMap->targets[i]);
+      alfin.push_back(make_pair(&myMap->targets[i],tmp));
+      //cout<<alfin[i].first->name<<","<<alfin[i].second<<endl;
+    }
+    cout<<"distanciaAlObjetivo: "<<alfin.size();
+  }
+  
+  int buscar(Celda* ex){
+    for(int i=0; i<myMap->numTargets;i++){
+      if(ex->name == alfin[i].first->name && alfin[i].first->pertenece(*ex)){
+        return alfin[i].second;
+      }
+    }
+    return 10;
   }
   
   void calculatePath(){ //TODO: revisar,  mejor el primero y luego aStar
   cout<<"\ncalculatePath";
-  Celda* actual = resultado[0];
-  int min = 1000;
+  cout<<"Nodo inicio";
+  resultado[0].printPos();
+  cout<<endl;
+  Celda actual;
+  actual = resultado[0];
+  mostrarRespuesta();
+  actual.printPos();
+  
+  
   Celda* next;
-  while(actual != fin){
-    for(int i = 0;i< actual->vecinos.size();i++){
-      next = actual->vecinos[i];
-      int tmp = actual->pesoVecinos[i];//mas mapDistance
-      if(tmp<min){min = tmp;}
+int cont = 0;
+  while(!(actual == fin) && cont <5){
+    cout<<actual.name<<",,"<<fin.name<<endl;
+    actual.printVecinos();
+    int min = 1000;
+    Celda* res;
+    cout<<"numV: "<<actual.vecinos.size();
+    for(int i = 0;i< actual.vecinos.size();i++){
+      cout<<"i:"<<i;
+      next = actual.vecinos[i].first;
+      cout<<" a: "<<(*next).name;
+      int tmp = buscar(next);
+      //int tmp = next->vecinos[i].second;//mas mapDistance
+      
+      if(tmp<min){min = tmp; res = next;}
+      actual=*res;
+      cout<<" t:"<<tmp<<" m:"<<min<<endl;
     }
-    resultado.push_back(next);
-    actual = next;
+    
+    resultado.push_back(*res);
+    mostrarRespuesta();
     cout<<"{";
+    cont++;
   }
   
   }

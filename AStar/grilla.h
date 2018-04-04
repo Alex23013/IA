@@ -27,19 +27,6 @@ class Grilla{
       targets.push_back(grilla[tx][ty]);
       tName++;
   }
-  /*int targetsAssigned = 0;
-  
-    for(int i =0; i< N;i++){
-      for(int j = 0; j < N ;j++){
-        
-        int tmp = 0;
-        if(targetsAssigned<numTargets)
-          tmp = rand()%2;
-        grilla[i][j].setCelda(i,j,tmp);
-        if(tmp == 1) 
-          targetsAssigned++;
-      }
-    }*/
   }
   
   void print(){ //imprime el mapa
